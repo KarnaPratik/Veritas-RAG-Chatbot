@@ -2,6 +2,10 @@ import os
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.document_loaders import OnlinePDFLoader
 
+from langchain_community.embeddings import OllamaEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 local_path = os.path.join(current_dir, "Laptop.pdf")
@@ -19,3 +23,10 @@ if local_path:
 else:
     print("No file path provided")
 
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size = 1000,
+    chunk_overlap = 200,
+    add_start_index = True
+)
+
+chunks = text_splitter.split_documents(data)
