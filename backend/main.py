@@ -30,3 +30,10 @@ text_splitter = RecursiveCharacterTextSplitter(
 )
 
 chunks = text_splitter.split_documents(data)
+
+vector_db = Chroma.from_documents(
+    documents = chunks,
+    embedding = OllamaEmbeddings(model="nomic-embed-text", show_progress = True),
+    # persist_directory = "./test-db", #turn on only if need to save the data for next session
+    collection_name = "local-docs"
+)
