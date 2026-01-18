@@ -17,7 +17,7 @@ if local_path:
     try:
         data = loader.load()
         if data:
-            print(data[0].page_content)
+            print("Data loaded successfully")
         else:
             print("Docuement was loaded but it appears to be empty!")
     except Exception as e:
@@ -39,3 +39,60 @@ vector_db = Chroma.from_documents(
     # persist_directory = "./test-db", #turn on only if need to save the data for next session
     collection_name = "local-docs"
 )
+
+#LLM interaction libraries
+
+from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_ollama import ChatOllama
+from langchain_core.runnables import RunnablePassthrough
+from langchain_classic.retrievers import MultiQueryRetriever
+
+local_model = "llama3.2:1b"
+llm = ChatOllama(model=local_model)
+
+QUERY_PROMPT = PromptTemplate(
+    input_variables=["question"],
+    template = """
+    You are an AI assistant for Veritas AI, a document analysis system. 
+    Your task is to generate 3 different search queries to find relevant information in 
+    the uploaded document that would help answer the user's question.
+
+    Generate queries that:
+    - Rephrase the question using different terminology
+    - Break down complex questions into simpler parts
+    - Consider both technical and plain language versions
+
+    Output only the 3 queries, one per line.
+
+    USER QUESTION: {question}"""
+)
+
+retriever = MultiQueryRetriever.from_llm(
+    vector_db.as_retriever(),
+    llm = llm,
+    prompt = QUERY_PROMPT
+)
+
+#RAG PROMPT
+template = """Answer the question based ONLY on the following context:
+{context}
+Question : {question}
+"""
+
+prompt = ChatPromptTemplate.from_template(template)
+
+
+chain = (
+    {"context" : retriever, "question": RunnablePassthrough()}
+    | prompt
+    | llm
+    | StrOutputParser()
+)
+
+user_question = input("Ask a question about your document: ")
+
+response = chain.invoke(user_question)
+
+print("\n--- AI Response---")
+print(response)
