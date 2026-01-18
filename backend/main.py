@@ -48,7 +48,7 @@ from langchain_ollama import ChatOllama
 from langchain_core.runnables import RunnablePassthrough
 from langchain_classic.retrievers import MultiQueryRetriever
 
-local_model = "llama3.1"
+local_model = "llama3.2:3b"
 llm = ChatOllama(model=local_model)
 
 QUERY_PROMPT = PromptTemplate(
