@@ -4,7 +4,7 @@ Veritas AI Chatbot (Latin for Truth) addresses the "hallucination" problem in LL
 🚀 Key Features
 Secure Ingestion: PDF processing with recursive character chunking.
 
-Semantic Search: High-dimensional vector search using Pinecone & OpenAI Embeddings.
+Semantic Search: High-dimensional vector search using ChromaDB & OLlama Embeddings.
 
 Source Attribution: Every response includes exact citations from the source material.
 
