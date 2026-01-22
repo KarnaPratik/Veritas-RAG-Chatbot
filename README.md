@@ -15,7 +15,7 @@ Veritas AI addresses the "hallucination" problem in LLMs by grounding every resp
 
 ## 🛠️ Tech Stack
 
-**Frontend**: React, Vite, TypeScript, Tailwind CSS, Lucide Icons
+**Frontend**: Streamlit
 
 **Backend**: FastAPI, Python, LangChain, LangChain Classic
 
